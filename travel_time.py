@@ -145,6 +145,12 @@ if __name__ == "__main__":
         def do_OPTIONS(self):
             self._send(200, {"ok": True})
 
+        def do_GET(self):
+            if self.path == "/__env":
+                self._send(200, {"tgis_len": len(os.environ.get("TGIS_KEY", "")), "port": os.environ.get("PORT", "")})
+            else:
+                self._send(200, {"ok": True, "service": "trevozhnik-proxy"})
+
         def do_POST(self):
             length = int(self.headers.get("Content-Length") or 0)
             status, payload = handle_body(self.rfile.read(min(length, 8192)))
